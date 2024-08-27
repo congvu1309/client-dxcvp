@@ -1,5 +1,4 @@
 import { getMeApi, logoutApi } from "@/api/user";
-import { ROUTE } from "@/constants/enum";
 import { UserModel } from "@/models/user";
 import { useEffect, useState } from "react";
 import { toast } from 'react-toastify';
@@ -35,7 +34,7 @@ const useAuth = () => {
                 toast.success('Đăng xuất thành công!');
                 setUser(null);
                 setTimeout(() => {
-                    window.location.href = ROUTE.HOME;
+                    window.location.reload();
                 }, 2000);
             }
         } catch (error) {

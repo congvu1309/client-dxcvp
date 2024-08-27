@@ -75,13 +75,13 @@ const Register: React.FC<RegisterProps> = ({ showModalRegister, setShowModalRegi
 
     return (
         <>
-            <Dialog open={showModalRegister} onClose={() => setShowModalRegister(false)} className="relative z-10">
+            <Dialog open={showModalRegister} onClose={() => setShowModalRegister(false)} className="relative z-50">
                 <DialogBackdrop
                     transition
                     className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in"
                 />
 
-                <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
+                <div className="fixed inset-0 z-50 w-screen overflow-y-auto">
                     <div className="block sm:flex min-h-full items-end justify-center sm:p-4 text-center sm:items-center">
                         <DialogPanel
                             transition
@@ -109,7 +109,6 @@ const Register: React.FC<RegisterProps> = ({ showModalRegister, setShowModalRegi
                                                     id='email'
                                                     name='email'
                                                     type='email'
-                                                    placeholder='your@example.com'
                                                     className='block w-full mt-1 rounded-md border-[1px] border-gray-300 py-2 px-4 bg-white shadow-sm focus:ring-indigo-500 focus:border-indigo-500'
                                                     value={formik.values.email}
                                                     onChange={formik.handleChange}

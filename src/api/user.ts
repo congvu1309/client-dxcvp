@@ -25,3 +25,7 @@ export const logoutApi = (token: any) => axios.post(`/api/logout`, {}, {
 });
 
 export const createNewUser = (payload: UserModel) => axios.post(`/api/create-new-user`, payload);
+
+export const getUserByIdApi = (userId: number) => axios.get(`/api/get-user-by-id?id=${userId}`);
+
+export const updateUserApi = (payload: UserModel) => axios.post(`/api/update-user`, payload);

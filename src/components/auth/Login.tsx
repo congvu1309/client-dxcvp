@@ -6,7 +6,6 @@ import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { toast } from 'react-toastify';
 import { useMutation } from 'react-query';
-import { ROUTE } from '@/constants/enum';
 import { loginApi } from '@/api/user';
 import GoogleLogo from '@/public/google-logo.png';
 import Link from 'next/link';
@@ -20,8 +19,8 @@ interface LoginProps {
 const Login: React.FC<LoginProps> = ({ showModalLogin, setShowModalLogin, setShowModalRegister }) => {
 
     const initialFormData = {
-        email: 'admin@gmail.com',
-        password: '12345678',
+        email: '',
+        password: '',
     };
 
     const validationSchema = Yup.object({
@@ -36,7 +35,7 @@ const Login: React.FC<LoginProps> = ({ showModalLogin, setShowModalLogin, setSho
                 toast.success('Đăng nhập thành công!');
                 setShowModalLogin(false);
                 setTimeout(() => {
-                    window.location.href = ROUTE.HOME;
+                    window.location.reload();
                 }, 1500);
             } else if (data.status === 1) {
                 toast.error('Thiếu thông số!');
@@ -63,13 +62,13 @@ const Login: React.FC<LoginProps> = ({ showModalLogin, setShowModalLogin, setSho
 
     return (
         <>
-            <Dialog open={showModalLogin} onClose={() => setShowModalLogin(false)} className="relative z-10">
+            <Dialog open={showModalLogin} onClose={() => setShowModalLogin(false)} className="relative z-50">
                 <DialogBackdrop
                     transition
                     className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in"
                 />
 
-                <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
+                <div className="fixed inset-0 z-50 w-screen overflow-y-auto">
                     <div className="block pt-28 sm:flex min-h-full items-end justify-center sm:p-4 text-center sm:items-center">
                         <DialogPanel
                             transition
@@ -98,7 +97,6 @@ const Login: React.FC<LoginProps> = ({ showModalLogin, setShowModalLogin, setSho
                                                         id='email'
                                                         name='email'
                                                         type='email'
-                                                        placeholder='your@example.com'
                                                         className='w-full border-2 py-2 px-4 rounded-lg outline-none'
                                                         value={formik.values.email}
                                                         onChange={formik.handleChange}
@@ -138,13 +136,13 @@ const Login: React.FC<LoginProps> = ({ showModalLogin, setShowModalLogin, setSho
                                     </div>
                                 </div>
                             </div>
-                            <div className="flex justify-center text-xl">hoặc</div>
+                            {/* <div className="flex justify-center text-xl">hoặc</div>
                             <div className='text-center text-xl font-semibold px-6 py-2 cursor-pointer'>
                                 <div className='w-full border-2 p-1.5 rounded-lg outline-none bg-white text-black hover:bg-gray-200 flex items-center justify-center'>
                                     <img alt="Logo" src={GoogleLogo.src} className="h-7 w-auto" />
                                     <span className='pl-2'>Đăng nhập với Google</span>
                                 </div>
-                            </div>
+                            </div> */}
                             <div className="px-6 py-4">
                                 Bạn chưa có tài khoản?
                                 <Link
