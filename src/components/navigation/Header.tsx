@@ -12,6 +12,8 @@ import { ROUTE } from '@/constants/enum';
 import { getAllProductApi } from '@/api/product';
 import { useRouter } from 'next/navigation';
 import { ProductModel } from '@/models/product';
+import { provincesWithDistricts } from '@/constants/location';
+import Select from 'react-select';
 
 interface HeaderProps {
     isHidden: boolean;
@@ -23,34 +25,31 @@ const Header: React.FC<HeaderProps> = ({ isHidden }) => {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [showModalRegister, setShowModalRegister] = useState(false);
     const [showModalLogin, setShowModalLogin] = useState(false);
-    const [products, setProducts] = useState<ProductModel[]>([]);
-    const [searchProduct, setSearchProduct] = useState('');
     const router = useRouter();
-
-    useEffect(() => {
-        const fetchProductData = async () => {
-            try {
-                const response = await getAllProductApi();
-                setProducts(response.data);
-            } catch (error) {
-                console.error('Failed to fetch product data', error);
-            }
-        };
-
-        fetchProductData();
-    }, []);
+    const [selectedProvince, setSelectedProvince] = useState<{ value: string; label: string } | null>(null);
 
     let imageBase64 = '';
     if (user?.avatar) {
         imageBase64 = Buffer.from(user.avatar, 'base64').toString('binary');
     }
+    type OptionType = { value: string; label: string };
 
-    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setSearchProduct(e.target.value);
+    const provincesOptions = provincesWithDistricts.map(province => ({
+        value: province.id.toString(),
+        label: province.name,
+        districts: province.districts
+    }));
+
+    const handleProvincesChange = (selectedOption: OptionType | null) => {
+        setSelectedProvince(selectedOption);
     };
 
     const handleSearchSubmit = () => {
-        router.push(`/search-results?query=${searchProduct}`);
+        if (selectedProvince) {
+            router.push(`${ROUTE.SEARCH_RESULTS}?address=${encodeURIComponent(selectedProvince.label)}`);
+        } else {
+            console.warn('No province selected');
+        }
     };
 
     return (
@@ -87,24 +86,32 @@ const Header: React.FC<HeaderProps> = ({ isHidden }) => {
                         </div>
                         {isHidden === true && (
                             <PopoverGroup className="hidden lg:flex lg:gap-x-12 rounded-3xl ring-1 ring-inset ring-gray-300 pl-8 pr-3 py-2 items-center">
-                                <div className='w-48'>
-                                    <label
-                                        htmlFor="districts"
-                                        className="block text-sm font-medium leading-6 text-gray-900 cursor-pointer"
+                                <div className='w-96'>
+                                    {/* <label
+                                        htmlFor="provinces"
+                                        className="hidden text-sm font-medium leading-6 text-gray-900 cursor-pointer pl-2"
                                     >
                                         Địa điểm
-                                    </label>
-                                    <input
-                                        id="districts"
-                                        name="districts"
-                                        type="text"
-                                        placeholder="Tìm kiếm điểm đến"
-                                        value={searchProduct}
-                                        onChange={handleSearchChange}
-                                        className="block w-full rounded-md border-0 text-gray-900 placeholder:text-gray-400 sm:text-sm sm:leading-6 outline-none border-none"
+                                    </label> */}
+                                    <Select
+                                        id='provinces'
+                                        value={selectedProvince}
+                                        onChange={handleProvincesChange}
+                                        options={provincesOptions}
+                                        placeholder='Địa diểm bạn muốn đến'
+                                        styles={{
+                                            control: (base, state) => ({
+                                                ...base,
+                                                border: "none",
+                                                boxShadow: "none",
+                                                "&:hover": {
+                                                    border: "none",
+                                                },
+                                            }),
+                                        }}
                                     />
                                 </div>
-                                <div className="w-20">
+                                {/* <div className="w-20">
                                     <label
                                         htmlFor="check-in"
                                         className="block text-sm font-medium leading-6 text-gray-900 cursor-pointer"
@@ -133,8 +140,8 @@ const Header: React.FC<HeaderProps> = ({ isHidden }) => {
                                         placeholder="Thêm ngày"
                                         className="block w-full rounded-md border-0 text-gray-900 placeholder:text-gray-400 sm:text-sm sm:leading-6 outline-none border-none"
                                     />
-                                </div>
-                                <div className="w-20">
+                                </div> */}
+                                {/* <div className="w-20">
                                     <label
                                         htmlFor="user"
                                         className="block text-sm font-medium leading-6 text-gray-900 cursor-pointer"
@@ -148,7 +155,7 @@ const Header: React.FC<HeaderProps> = ({ isHidden }) => {
                                         placeholder="Số lượng"
                                         className="block w-full rounded-md border-0 text-gray-900 placeholder:text-gray-400 sm:text-sm sm:leading-6 outline-none border-none"
                                     />
-                                </div>
+                                </div> */}
                                 <div
                                     onClick={handleSearchSubmit}
                                     className="text-white ring-1 ring-inset ring-gray-300 rounded-full p-1.5 cursor-pointer bg-primary"
@@ -256,7 +263,7 @@ const Header: React.FC<HeaderProps> = ({ isHidden }) => {
                                     <div className="-my-6 divide-y divide-gray-500/10">
                                         <div className="space-y-2 pt-6">
                                             <Link
-                                                href="#"
+                                                href={ROUTE.TRIP}
                                                 className="block pt-6 pb-3 text-base text-gray-700 font-semibold data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
                                             >
                                                 Chuyến đi

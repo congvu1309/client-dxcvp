@@ -7,48 +7,45 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import defaultImage from '@/public/no-image.jpg';
 import Image from 'next/image';
-import { Dialog, DialogPanel, PopoverGroup, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
-import { Bars3Icon, XMarkIcon, UserCircleIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
-import SearchProduct from "./SearchProduct";
 
 const ListProduct = () => {
 
     const [products, setProducts] = useState<ProductModel[]>([]);
-    const [searchProduct, setSearchProduct] = useState('');
     const router = useRouter();
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
 
     useEffect(() => {
-        const fetchProductData = async () => {
+        const fetchProductData = async (page: number) => {
             try {
-                const response = await getAllProductApi();
-                setProducts(response.data);
+                const response = await getAllProductApi(page);
+                setProducts(response.data.product);
+                const totalCount = response.data.totalCount;
+                const totalPagesCount = Math.ceil(totalCount / 20);
+                setTotalPages(totalPagesCount);
             } catch (error) {
                 console.error('Failed to fetch product data', error);
             }
         };
 
-        fetchProductData();
-    }, []);
+        fetchProductData(currentPage);
+    }, [currentPage]);
 
     const filteredProduct = products
         .filter(product => product.status === 'S1')
-        .filter(product => {
-            const matchesSearchTerm = product.districts.toLowerCase().includes(searchProduct.toLowerCase());
-            const matchesSearchTitle = product.title.toLowerCase().includes(searchProduct.toLowerCase());
-            return matchesSearchTerm && matchesSearchTitle;
-        }).reverse();
+        .reverse();
 
-    const handleViewDetailProduct = (productId: any) => {
-        router.push(`${ROUTE.DETAIL_PRODUCT}/${productId}`);
+    const handleViewDetailProduct = (productId: any, title: any) => {
+        router.push(`${ROUTE.DETAIL_PRODUCT}/${productId}&${title}`);
     }
+
+    const goToPage = (page: number) => {
+        setCurrentPage(page);
+    };
 
     return (
         <>
             <div className="pb-8">
-                {/* <SearchProduct
-                    searchProduct={searchProduct}
-                    setSearchProduct={setSearchProduct}
-                /> */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                     {filteredProduct.length > 0 && filteredProduct.map((product) => {
                         let imageSrc = defaultImage.src;
@@ -66,7 +63,7 @@ const ListProduct = () => {
                             <div
                                 key={product.id}
                                 className='cursor-pointer'
-                                onClick={() => handleViewDetailProduct(product.id)}
+                                onClick={() => handleViewDetailProduct(product.id, product.title)}
                             >
                                 <div className="h-[250px] w-auto">
                                     <Image
@@ -87,6 +84,26 @@ const ListProduct = () => {
                         );
                     })}
                 </div>
+            </div>
+            {/* Pagination Controls */}
+            <div className='flex justify-end mb-8'>
+                <nav className='block'>
+                    <ul className='flex pl-0 rounded list-none flex-wrap'>
+                        {Array.from(Array(totalPages > 0 ? totalPages : 1).keys()).map((index) => (
+                            <li key={index}>
+                                <button
+                                    onClick={() => goToPage(index + 1)}
+                                    className={`px-3 py-1 mx-1 rounded focus:outline-none ${currentPage === index + 1
+                                        ? 'bg-primary text-white'
+                                        : 'hover:bg-gray-200'
+                                        }`}
+                                >
+                                    {index + 1}
+                                </button>
+                            </li>
+                        ))}
+                    </ul>
+                </nav>
             </div>
         </>
     );

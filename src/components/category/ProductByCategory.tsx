@@ -48,7 +48,7 @@ const ProductByCategory = () => {
             ) : (
                 <>
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                        {filteredProduct.length > 0 && filteredProduct.map((product) => {
+                        {filteredProduct.length > 0 ? filteredProduct.map((product) => {
                             let imageSrc = defaultImage.src;
                             const imageProductData = product.imageProductData?.[0];
 
@@ -83,7 +83,9 @@ const ProductByCategory = () => {
                                     </div>
                                 </div>
                             );
-                        })}
+                        }) :
+                            <div className="text-2xl font-semibold mb-4">Hiện chưa có dịch vụ</div>
+                        }
                     </div>
                 </>
             )}

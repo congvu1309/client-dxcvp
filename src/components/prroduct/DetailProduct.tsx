@@ -15,7 +15,7 @@ import UtilitiesProduct from "./UtilitiesProduct";
 import { TIME_TS } from "@/constants/time";
 import dynamic from 'next/dynamic';
 import { DateRange } from 'react-date-range';
-import { addDays, differenceInDays, isBefore, format } from 'date-fns';
+import { addDays, differenceInDays, isBefore, format, eachDayOfInterval, parse } from 'date-fns';
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
 import { vi } from 'date-fns/locale';
@@ -23,8 +23,17 @@ import { ROUTE } from "@/constants/enum";
 import useAuth from "@/hooks/useAuth";
 import Login from "../auth/Login";
 import Register from "../auth/Register";
+import { ScheduleModel } from "@/models/schedule";
+import { getAllScheduleByProductId } from "@/api/schedule";
 
 const MapProduct = dynamic(() => import('./MapProduct'), { ssr: false });
+
+interface Schedule {
+    productId: string;
+    status: string;
+    startDate: string;
+    endDate: string;
+}
 
 const DetailProduct = () => {
 
@@ -44,6 +53,7 @@ const DetailProduct = () => {
     const { user } = useAuth();
     const [showModalRegister, setShowModalRegister] = useState(false);
     const [showModalLogin, setShowModalLogin] = useState(false);
+    const [schedules, setSchedules] = useState<ScheduleModel[]>([]);
 
     useEffect(() => {
         const fetchProductData = async () => {
@@ -68,6 +78,16 @@ const DetailProduct = () => {
             }
         };
 
+        const fetchSchedules = async () => {
+            try {
+                const response = await getAllScheduleByProductId(id);
+                setSchedules(response.data);
+            } catch (error) {
+                console.error('Failed to fetch schedules', error);
+            }
+        };
+
+        fetchSchedules();
         fetchProductData();
         fetchUtilitiesData();
     }, []);
@@ -85,7 +105,7 @@ const DetailProduct = () => {
         }
         return words.slice(0, wordLimit).join(' ') + '...';
     };
-    const truncatedDescription = truncateDescription(product?.description ?? '', 100);
+    const truncatedDescription = truncateDescription(product?.description ?? '', 250);
 
     const utilitiesData = product?.utilityProductData ?? [];
     const utilityId = utilitiesData.map((item: any) => item.utilityId);
@@ -164,6 +184,15 @@ const DetailProduct = () => {
         }
     }
 
+    const disabledDates = schedules
+        .filter((schedule) => schedule.status === 'accept')
+        .reduce<Date[]>((dates, schedule) => {
+            const start = parse(schedule.startDate, 'dd/MM/yyyy', new Date());
+            const end = parse(schedule.endDate, 'dd/MM/yyyy', new Date());
+            const interval = eachDayOfInterval({ start, end });
+            return dates.concat(interval);
+        }, []);
+
     if (product) {
         return (
             <>
@@ -202,18 +231,20 @@ const DetailProduct = () => {
                         <div className="sm:w-2/3">
                             <div data-color-mode="light">
                                 <div className="text-xl sm:text-3xl font-semibold mb-2">Giới thiệu về chỗ ở này</div>
-                                <MDEditor.Markdown
-                                    source={truncatedDescription}
-                                    style={{ whiteSpace: 'pre-wrap', fontSize: '18px' }}
-                                />
-                                <div className="pt-3 sm:pt-5 mb-4">
-                                    <Link
-                                        href="#"
-                                        className="text-base sm:text-lg font-semibold underline"
-                                        onClick={() => setShowModalDescriptionProduct(true)}
-                                    >
-                                        Xem thêm
-                                    </Link>
+                                <div className="h-[400px] block">
+                                    <MDEditor.Markdown
+                                        source={truncatedDescription}
+                                        style={{ whiteSpace: 'pre-wrap', fontSize: '18px' }}
+                                    />
+                                    <div className="pt-3 sm:pt-5 mb-4">
+                                        <Link
+                                            href="#"
+                                            className="text-base sm:text-lg font-semibold underline"
+                                            onClick={() => setShowModalDescriptionProduct(true)}
+                                        >
+                                            Xem thêm
+                                        </Link>
+                                    </div>
                                 </div>
                             </div>
                             <div className="mb-4">
@@ -263,6 +294,7 @@ const DetailProduct = () => {
                                     months={1}
                                     direction="horizontal"
                                     minDate={addDays(new Date(), 1)}
+                                    disabledDates={disabledDates}
                                 />
                                 <div className="flex items-center mb-2">
                                     <div className="text-base sm:text-lg">Khách</div>
@@ -339,12 +371,12 @@ const DetailProduct = () => {
                     <div className="mb-4">
                         <div className="text-xl sm:text-3xl font-semibold mb-2">Nơi bạn sẽ đến</div>
                         <span className="text-base sm:text-lg">{product?.districts}, {product.provinces}</span>
-                        <MapProduct districts={product.districts} />
+                        {/* <MapProduct districts={product.districts} /> */}
                     </div>
-                    <div className="mt-4">
+                    {/* <div className="mt-4">
                         <div className="text-xl sm:text-3xl font-semibold mb-2">Đánh giá</div>
 
-                    </div>
+                    </div> */}
                 </div>
                 <DescriptionProduct
                     showModalDescriptionProduct={showModalDescriptionProduct}

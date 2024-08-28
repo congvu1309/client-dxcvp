@@ -13,18 +13,19 @@ import { useMutation } from 'react-query';
 import { toast } from 'react-toastify';
 import * as Yup from 'yup';
 import { DateRange } from 'react-date-range';
-import { addDays, differenceInDays, format } from 'date-fns';
+import { addDays, differenceInDays, format, parse, eachDayOfInterval } from 'date-fns';
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
 import { vi } from 'date-fns/locale';
-import { createNewSchedule } from '@/api/schedule';
+import { createNewSchedule, getAllScheduleByProductId } from '@/api/schedule';
 import useAuth from '@/hooks/useAuth';
 import { ROUTE } from '@/constants/enum';
+import { ScheduleModel } from '@/models/schedule';
 
 interface InfoBookProps {
     productId: number;
-    startDate: Date;
-    endDate: Date;
+    startDate: string | null;
+    endDate: string | null;
     numberOfDays: number;
     guestCount: number;
 }
@@ -43,6 +44,7 @@ const InfoBook: React.FC<InfoBookProps> = ({ productId, startDate, endDate, numb
     });
     const [numberOfDays, setNumberOfDays] = useState<number>(initialNumberOfDays);
     const { user, loading } = useAuth();
+    const [schedules, setSchedules] = useState<ScheduleModel[]>([]);
 
     useEffect(() => {
 
@@ -77,9 +79,21 @@ const InfoBook: React.FC<InfoBookProps> = ({ productId, startDate, endDate, numb
                 startDate: displayStartDate,
                 endDate: displayEndDate,
                 numberOfDays: displayNumberOfDays,
-                guestCount: guestCount
+                guestCount: guestCount,
+                pay: formattedProvisional
             });
         }
+
+        const fetchSchedules = async () => {
+            try {
+                const response = await getAllScheduleByProductId(productId);
+                setSchedules(response.data);
+            } catch (error) {
+                console.error('Failed to fetch schedules', error);
+            }
+        };
+
+        fetchSchedules();
 
     }, [productId, dateRangeSelection, user, loading, numberOfDays, guestCount]);
 
@@ -97,6 +111,7 @@ const InfoBook: React.FC<InfoBookProps> = ({ productId, startDate, endDate, numb
         image: '',
         previewImgURL: '',
         phoneNumber: '',
+        pay: '',
     };
 
     const validationSchema = Yup.object({
@@ -121,7 +136,6 @@ const InfoBook: React.FC<InfoBookProps> = ({ productId, startDate, endDate, numb
     const displayStartDate = format(dateRangeSelection.startDate, 'dd/MM/yyyy');
     const displayEndDate = format(dateRangeSelection.endDate, 'dd/MM/yyyy');
     const displayNumberOfDays = Number(numberOfDays)
-
     const formattedPrice = product?.price ?? "0";
     const pricePerNight = Number(formattedPrice.replace(/[^\d.-]/g, ''));
     const provisional = pricePerNight * numberOfDays;
@@ -222,13 +236,22 @@ const InfoBook: React.FC<InfoBookProps> = ({ productId, startDate, endDate, numb
         });
     };
 
+    const disabledDates = schedules
+        .filter((schedule) => schedule.status === 'accept')
+        .reduce<Date[]>((dates, schedule) => {
+            const start = parse(schedule.startDate, 'dd/MM/yyyy', new Date());
+            const end = parse(schedule.endDate, 'dd/MM/yyyy', new Date());
+            const interval = eachDayOfInterval({ start, end });
+            return dates.concat(interval);
+        }, []);
+
     const mutation = useMutation({
         mutationFn: (data: typeof initialFormData) => createNewSchedule(data as any),
         onSuccess: (data: any) => {
             if (data.status === 0) {
                 toast.success('Đặt lịch thành công!');
                 setTimeout(() => {
-                    window.location.href = ROUTE.TRIP;
+                    window.location.href = ROUTE.SCHEDULED_SUCCESSFULLY;
                 }, 1500);
             } else if (data.status === 1) {
                 toast.error('Đặt lịch thất bại!');
@@ -282,6 +305,7 @@ const InfoBook: React.FC<InfoBookProps> = ({ productId, startDate, endDate, numb
                                             direction="horizontal"
                                             minDate={addDays(new Date(), 1)}
                                             className='custom-date-range'
+                                            disabledDates={disabledDates}
                                         />
                                     )}
                                     <div className="flex justify-between mb-2 text-base sm:text-lg">

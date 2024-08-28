@@ -9,6 +9,8 @@ import { useMutation } from 'react-query';
 import { loginApi } from '@/api/user';
 import GoogleLogo from '@/public/google-logo.png';
 import Link from 'next/link';
+import { Eye, EyeOff } from 'lucide-react';
+import { useState } from 'react';
 
 interface LoginProps {
     showModalLogin: boolean;
@@ -17,6 +19,8 @@ interface LoginProps {
 }
 
 const Login: React.FC<LoginProps> = ({ showModalLogin, setShowModalLogin, setShowModalRegister }) => {
+
+    const [showPassword, setShowPassword] = useState(false);
 
     const initialFormData = {
         email: '',
@@ -110,15 +114,23 @@ const Login: React.FC<LoginProps> = ({ showModalLogin, setShowModalLogin, setSho
                                             <div>
                                                 <label htmlFor='password' className='text-xl font-medium flex'>Mật khẩu</label>
                                                 <div className='mt-2'>
-                                                    <input
-                                                        id='password'
-                                                        name='password'
-                                                        type='password'
-                                                        className='w-full border-2 py-2 px-4 rounded-lg outline-none'
-                                                        value={formik.values.password}
-                                                        onChange={formik.handleChange}
-                                                        onBlur={formik.handleBlur}
-                                                    />
+                                                    <div className='relative'>
+                                                        <input
+                                                            id='password'
+                                                            name='password'
+                                                            type={showPassword ? 'text' : 'password'}
+                                                            className='block w-full mt-1 rounded-md border-[1px] border-gray-300 py-2 px-4 bg-white shadow-sm focus:ring-indigo-500 focus:border-indigo-500'
+                                                            value={formik.values.password}
+                                                            onChange={formik.handleChange}
+                                                            onBlur={formik.handleBlur}
+                                                        />
+                                                        <div
+                                                            className='absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer'
+                                                            onClick={() => setShowPassword(!showPassword)}
+                                                        >
+                                                            {showPassword ? <EyeOff className='h-5 w-5' /> : <Eye className='h-5 w-5' />}
+                                                        </div>
+                                                    </div>
                                                     {formik.touched.password && formik.errors.password ? (
                                                         <div className='text-primary'>{formik.errors.password}</div>
                                                     ) : null}

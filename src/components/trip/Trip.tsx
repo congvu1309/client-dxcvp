@@ -1,6 +1,6 @@
 'use client';
 
-import { getAllProductApi, getProductByIdApi } from "@/api/product";
+import { getProductByIdApi } from "@/api/product";
 import { ProductModel } from "@/models/product";
 import { useEffect, useState } from "react";
 import Image from 'next/image';
@@ -11,12 +11,13 @@ import { ScheduleModel } from "@/models/schedule";
 import { ROUTE } from "@/constants/enum";
 import { useRouter } from "next/navigation";
 import LoadingPage from "@/app/loading";
+import Link from 'next/link';
 
 const Trip = () => {
     const { user, loading } = useAuth();
     const [products, setProducts] = useState<Record<number, ProductModel>>({});
     const [schedules, setSchedules] = useState<ScheduleModel[]>([]);
-    const [isLoading, setIsLoading] = useState(true); 
+    const [isLoading, setIsLoading] = useState(true);
     const router = useRouter();
 
     useEffect(() => {
@@ -27,18 +28,16 @@ const Trip = () => {
         const fetchScheduleData = async () => {
             try {
                 if (user) {
-                    setIsLoading(true); // Start loading
+                    setIsLoading(true);
                     const scheduleResponse = await getAllScheduleByUserId(user.id);
                     const schedulesData = scheduleResponse.data;
                     setSchedules(schedulesData);
 
-                    // Fetch products for each schedule
                     const productPromises = schedulesData.map(async (schedule: ScheduleModel) => {
                         return await getProductByIdApi(schedule.productId);
                     });
                     const productResponses = await Promise.all(productPromises);
 
-                    // Map products by their ID
                     const productsMap = productResponses.reduce((acc: Record<number, ProductModel>, response) => {
                         acc[response.data.id] = response.data;
                         return acc;
@@ -49,7 +48,7 @@ const Trip = () => {
             } catch (error) {
                 console.error('Failed to fetch schedule or product data', error);
             } finally {
-                setIsLoading(false); 
+                setIsLoading(false);
             }
         };
 
@@ -114,18 +113,30 @@ const Trip = () => {
                 <LoadingPage />
             ) : (
                 <>
-                    <div className="text-xl sm:text-3xl font-semibold mb-10">Đã duyệt</div>
-                    {acceptSchedules.map(schedule => (
-                        <ScheduleCard key={schedule.id} schedule={schedule} statusText="(Đã thanh toán)" />
-                    ))}
-                    <div className="text-xl sm:text-3xl font-semibold my-10">Lịch trình đang chờ xử lý</div>
-                    {pendingSchedules.map(schedule => (
-                        <ScheduleCard key={schedule.id} schedule={schedule} statusText="(Chỉ trừ tiền khi được duyệt)" />
-                    ))}
+                    {schedules.length > 0 ? (
+                        <>
+                            <div className="text-xl sm:text-3xl font-semibold mb-10">Đã duyệt</div>
+                            {acceptSchedules.map(schedule => (
+                                <ScheduleCard key={schedule.id} schedule={schedule} statusText="(Đã thanh toán)" />
+                            ))}
+                            <div className="text-xl sm:text-3xl font-semibold my-10">Lịch trình đang chờ xử lý</div>
+                            {pendingSchedules.map(schedule => (
+                                <ScheduleCard key={schedule.id} schedule={schedule} statusText="(Chỉ trừ tiền khi được duyệt)" />
+                            ))}
+                        </>
+                    ) : (
+                        <div className="text-center ">
+                            <div className="text-lg sm:text-xl font-semibold pb-8">Bạn chưa có lịch trình nào</div>
+                            <Link href="/">
+                                <span className="text-xl sm:text-3xl font-semibold text-primary">Quay lại trang home để thêm hành trình mới</span>
+                            </Link>
+                        </div>
+                    )}
                 </>
             )}
         </div>
     );
+
 };
 
 export default Trip;

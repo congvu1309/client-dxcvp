@@ -16,7 +16,7 @@
 
 .custom-date-range .rdrMonths {
   width: 100% !important;
-  font-size: 25px !important;
+  font-size: 20px !important;
 }
 
 @media (max-width: 640px) {
@@ -25,4 +25,8 @@
     width: 100% !important;
     font-size: 12px !important;
   }
+}
+
+.custom-gradient {
+  background: linear-gradient(135deg, rgba(34, 193, 195, 1) 0%, rgba(253, 187, 45, 1) 100%);
 }

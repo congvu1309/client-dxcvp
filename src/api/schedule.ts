@@ -5,3 +5,4 @@ export const createNewSchedule = (payload: ScheduleModel) => axios.post(`/api/cr
 
 export const getAllScheduleByUserId = (userId: number) => axios.get(`/api/get-all-schedule-by-userId?userId=${userId}`);
 
+export const getAllScheduleByProductId = (productId: number) => axios.get(`/api/get-all-schedule-by-userId?productId=${productId}`);

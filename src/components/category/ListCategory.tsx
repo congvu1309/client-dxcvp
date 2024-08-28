@@ -38,8 +38,8 @@ const ListCategory = () => {
         }
     };
 
-    const handleGetProductByCategory = (categoryId: any) => {
-        router.push(`${ROUTE.CATEGORY}/${categoryId}`);
+    const handleGetProductByCategory = (categoryId: any, title: any) => {
+        router.push(`${ROUTE.CATEGORY}/${categoryId}&${title}`);
     }
 
     return (
@@ -65,7 +65,7 @@ const ListCategory = () => {
                             <div
                                 key={category.id}
                                 className="cursor-pointer hover:underline"
-                                onClick={() => handleGetProductByCategory(category.id)}
+                                onClick={() => handleGetProductByCategory(category.id, category.title)}
 
                             >
                                 <div className="flex flex-col items-center px-4">
