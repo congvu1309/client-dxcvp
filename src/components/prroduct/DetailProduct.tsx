@@ -28,13 +28,6 @@ import { getAllScheduleByProductId } from "@/api/schedule";
 
 const MapProduct = dynamic(() => import('./MapProduct'), { ssr: false });
 
-interface Schedule {
-    productId: string;
-    status: string;
-    startDate: string;
-    endDate: string;
-}
-
 const DetailProduct = () => {
 
     const params = useParams();
@@ -105,7 +98,7 @@ const DetailProduct = () => {
         }
         return words.slice(0, wordLimit).join(' ') + '...';
     };
-    const truncatedDescription = truncateDescription(product?.description ?? '', 250);
+    const truncatedDescription = truncateDescription(product?.description ?? '', 200);
 
     const utilitiesData = product?.utilityProductData ?? [];
     const utilityId = utilitiesData.map((item: any) => item.utilityId);
@@ -177,6 +170,22 @@ const DetailProduct = () => {
     const formattedEndDate = format(endDate, 'dd/MM/yyyy');
 
     const handleClickReservation = () => {
+        const minDate = addDays(new Date(), 1);
+
+        if (isBefore(startDate, minDate)) {
+            toast.error('Ngày nhận phòng không thể là ngày hôm nay.');
+            return;
+        }
+
+        const isStartDateDisabled = disabledDates.some((disabledDate) =>
+            format(disabledDate, 'dd/MM/yyyy') === format(startDate, 'dd/MM/yyyy')
+        );
+
+        if (isStartDateDisabled) {
+            toast.error('Ngày nhận phòng đã bị đặt. Vui lòng chọn ngày khác.');
+            return;
+        }
+
         if (!user) {
             setShowModalLogin(true)
         } else {
@@ -231,7 +240,7 @@ const DetailProduct = () => {
                         <div className="sm:w-2/3">
                             <div data-color-mode="light">
                                 <div className="text-xl sm:text-3xl font-semibold mb-2">Giới thiệu về chỗ ở này</div>
-                                <div className="h-[400px] block">
+                                <div className="h-[430px] sm:h-[250px] block">
                                     <MDEditor.Markdown
                                         source={truncatedDescription}
                                         style={{ whiteSpace: 'pre-wrap', fontSize: '18px' }}
@@ -279,6 +288,14 @@ const DetailProduct = () => {
                                 >
                                     Xem toàn bộ {utilityDetails.length} tiện nghi
                                 </Link>
+                            </div>
+                            <div className="mb-4">
+                                <div className="text-xl sm:text-3xl font-semibold mb-2">Nội quy nhà</div>
+                                <div className="flex flex-col text-base sm:text-lg">
+                                    <span>Nhận phòng sau {checkInLabel}</span>
+                                    <span>Trả phòng trước {checkOutLabel}</span>
+                                    <span>Tối đa {product.guests} khách</span>
+                                </div>
                             </div>
                         </div>
                         <div className="sm:w-1/3">

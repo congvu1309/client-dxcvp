@@ -451,7 +451,7 @@ const InfoBook: React.FC<InfoBookProps> = ({ productId, startDate, endDate, numb
                                         </div>
                                     </div>
                                     <div className='text-xl sm:text-2xl font-semibold mb-2'>Bắt buộc cho chuyến đi của bạn</div>
-                                    <div className="mb-2">
+                                    <div className="mb-4">
                                         <div className="flex justify-between items-center text-base sm:text-lg">
                                             <div className="flex flex-col">
                                                 <span>Người đại diện</span>
@@ -476,7 +476,7 @@ const InfoBook: React.FC<InfoBookProps> = ({ productId, startDate, endDate, numb
                                             <div className="text-primary">{formik.errors.image}</div>
                                         ) : null}
                                     </div>
-                                    <div className="mb-2">
+                                    <div className="mb-4">
                                         <div className="flex justify-between items-center">
                                             <div className="">
                                                 <label htmlFor='phoneNumber' className="block text-base sm:text-lg text-gray-700">Số điện thoại</label>
