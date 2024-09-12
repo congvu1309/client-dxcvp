@@ -56,7 +56,7 @@ const MapProduct: React.FC<MapProductProps> = ({ districts }) => {
                 {coordinates ? (
                     <MapContainer
                         center={[coordinates.lat, coordinates.lon]}
-                        zoom={12}
+                        zoom={13}
                         style={{ height: "100%", width: "100%", borderRadius: '12px', zIndex: '30' }}
                     >
                         <TileLayer

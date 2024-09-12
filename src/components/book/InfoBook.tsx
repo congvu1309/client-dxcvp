@@ -80,7 +80,7 @@ const InfoBook: React.FC<InfoBookProps> = ({ productId, startDate, endDate, numb
                 endDate: displayEndDate,
                 numberOfDays: displayNumberOfDays,
                 guestCount: guestCount,
-                pay: formattedProvisional
+                pay: formattedTotalAmount
             });
         }
 
@@ -290,7 +290,7 @@ const InfoBook: React.FC<InfoBookProps> = ({ productId, startDate, endDate, numb
                                     <div className="flex justify-between mb-2 text-base sm:text-lg">
                                         <span>Ngày {displayStartDate} - {displayEndDate}</span>
                                         <div
-                                            className="font-semibold underline"
+                                            className="font-semibold underline cursor-pointer"
                                             onClick={handleDateEditClick}
                                         >
                                             {isEditingDate ? 'Xong' : 'Chỉnh sửa'}
@@ -332,7 +332,7 @@ const InfoBook: React.FC<InfoBookProps> = ({ productId, startDate, endDate, numb
                                             <span>Khách {guestCount} người</span>
                                         )}
                                         <div
-                                            className="font-semibold underline"
+                                            className="font-semibold underline cursor-pointer"
                                             onClick={handleEditClick}
                                         >
                                             {isEditingGuest ? 'Xong' : 'Chỉnh sửa'}

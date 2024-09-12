@@ -119,9 +119,9 @@ const Trip = () => {
                             {acceptSchedules.map(schedule => (
                                 <ScheduleCard key={schedule.id} schedule={schedule} statusText="(Đã thanh toán)" />
                             ))}
-                            <div className="text-xl sm:text-3xl font-semibold my-10">Lịch trình đang chờ xử lý</div>
+                            <div className="text-xl sm:text-3xl font-semibold my-10">Đang chờ xử lý</div>
                             {pendingSchedules.map(schedule => (
-                                <ScheduleCard key={schedule.id} schedule={schedule} statusText="(Chỉ trừ tiền khi được duyệt)" />
+                                <ScheduleCard key={schedule.id} schedule={schedule} statusText="(Chỉ trừ tiền khi đã duyệt)" />
                             ))}
                         </>
                     ) : (

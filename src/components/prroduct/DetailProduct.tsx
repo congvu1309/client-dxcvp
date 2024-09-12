@@ -109,15 +109,16 @@ const DetailProduct = () => {
         image: utility.image,
     }));
 
-    const utilityLookup = new Map<string, { label: string; image: string }>();
+    const utilityLookup = new Map<string, { id: string, label: string; image: string }>();
     utilitiesOptions.forEach(option => {
         utilityLookup.set(option.value, {
+            id: option.value,
             label: option.label,
             image: option.image,
         });
     });
 
-    const utilityDetails = utilityId.map((id: any) => utilityLookup.get(id.toString()) ?? { label: '', image: '' });
+    const utilityDetails = utilityId.map((id: any) => utilityLookup.get(id.toString()) ?? { id: '', label: '', image: '' });
 
     const timeOptions = TIME_TS.map(time => ({
         value: time.id.toString(),
@@ -170,19 +171,10 @@ const DetailProduct = () => {
     const formattedEndDate = format(endDate, 'dd/MM/yyyy');
 
     const handleClickReservation = () => {
-        const minDate = addDays(new Date(), 1);
+        const minDate = addDays(new Date(), 0);
 
         if (isBefore(startDate, minDate)) {
             toast.error('Ngày nhận phòng không thể là ngày hôm nay.');
-            return;
-        }
-
-        const isStartDateDisabled = disabledDates.some((disabledDate) =>
-            format(disabledDate, 'dd/MM/yyyy') === format(startDate, 'dd/MM/yyyy')
-        );
-
-        if (isStartDateDisabled) {
-            toast.error('Ngày nhận phòng đã bị đặt. Vui lòng chọn ngày khác.');
             return;
         }
 
@@ -240,20 +232,20 @@ const DetailProduct = () => {
                         <div className="sm:w-2/3">
                             <div data-color-mode="light">
                                 <div className="text-xl sm:text-3xl font-semibold mb-2">Giới thiệu về chỗ ở này</div>
-                                <div className="h-[430px] sm:h-[250px] block">
+                                <div className="h-[430px] sm:h-[250px] overflow-hidden">
                                     <MDEditor.Markdown
                                         source={truncatedDescription}
                                         style={{ whiteSpace: 'pre-wrap', fontSize: '18px' }}
                                     />
-                                    <div className="pt-3 sm:pt-5 mb-4">
-                                        <Link
-                                            href="#"
-                                            className="text-base sm:text-lg font-semibold underline"
-                                            onClick={() => setShowModalDescriptionProduct(true)}
-                                        >
-                                            Xem thêm
-                                        </Link>
-                                    </div>
+                                </div>
+                                <div className="pt-3 sm:pt-5 mb-4">
+                                    <Link
+                                        href="#"
+                                        className="text-base sm:text-lg font-semibold underline"
+                                        onClick={() => setShowModalDescriptionProduct(true)}
+                                    >
+                                        Xem thêm
+                                    </Link>
                                 </div>
                             </div>
                             <div className="mb-4">
@@ -266,16 +258,14 @@ const DetailProduct = () => {
                                         }
 
                                         return (
-                                            <>
-                                                <div className="flex items-center" key={utility.id}>
-                                                    <img
-                                                        src={imageBase64}
-                                                        alt={utility.label}
-                                                        className='mt-2 rounded-md mr-7 h-12 w-12'
-                                                    />
-                                                    <span className='text-base sm:text-lg'>{utility.label}</span>
-                                                </div>
-                                            </>
+                                            <div className="flex items-center" key={utility.id}>
+                                                <img
+                                                    src={imageBase64}
+                                                    alt={utility.label}
+                                                    className='mt-2 rounded-md mr-7 h-12 w-12'
+                                                />
+                                                <span className='text-base sm:text-lg'>{utility.label}</span>
+                                            </div>
                                         )
                                     })}
                                 </div>
@@ -388,7 +378,7 @@ const DetailProduct = () => {
                     <div className="mb-4">
                         <div className="text-xl sm:text-3xl font-semibold mb-2">Nơi bạn sẽ đến</div>
                         <span className="text-base sm:text-lg">{product?.districts}, {product.provinces}</span>
-                        {/* <MapProduct districts={product.districts} /> */}
+                        <MapProduct districts={product.districts} />
                     </div>
                     {/* <div className="mt-4">
                         <div className="text-xl sm:text-3xl font-semibold mb-2">Đánh giá</div>

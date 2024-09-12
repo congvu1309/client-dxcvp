@@ -2,18 +2,19 @@
 
 import Link from 'next/link';
 import Logo from '@/public/favicon.ico';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Bars3Icon, XMarkIcon, UserCircleIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { Dialog, DialogPanel, PopoverGroup, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 import useAuth from '@/hooks/useAuth';
 import Login from '../auth/Login';
 import Register from '../auth/Register';
 import { ROUTE } from '@/constants/enum';
-import { getAllProductApi } from '@/api/product';
 import { useRouter } from 'next/navigation';
-import { ProductModel } from '@/models/product';
 import { provincesWithDistricts } from '@/constants/location';
-import Select from 'react-select';
+import dynamic from 'next/dynamic';
+import { ActionMeta } from 'react-select';
+
+const DynamicSelect = dynamic(() => import('react-select'), { ssr: false });
 
 interface HeaderProps {
     isHidden: boolean;
@@ -32,6 +33,7 @@ const Header: React.FC<HeaderProps> = ({ isHidden }) => {
     if (user?.avatar) {
         imageBase64 = Buffer.from(user.avatar, 'base64').toString('binary');
     }
+
     type OptionType = { value: string; label: string };
 
     const provincesOptions = provincesWithDistricts.map(province => ({
@@ -40,7 +42,8 @@ const Header: React.FC<HeaderProps> = ({ isHidden }) => {
         districts: province.districts
     }));
 
-    const handleProvincesChange = (selectedOption: OptionType | null) => {
+    const handleProvincesChange = (newValue: unknown, actionMeta: ActionMeta<unknown>) => {
+        const selectedOption = newValue as OptionType | null;
         setSelectedProvince(selectedOption);
     };
 
@@ -93,7 +96,7 @@ const Header: React.FC<HeaderProps> = ({ isHidden }) => {
                                     >
                                         Địa điểm
                                     </label> */}
-                                    <Select
+                                    <DynamicSelect
                                         id='provinces'
                                         value={selectedProvince}
                                         onChange={handleProvincesChange}

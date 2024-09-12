@@ -6,7 +6,7 @@ import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { toast } from 'react-toastify';
 import { useMutation } from 'react-query';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 import { createNewUser } from '@/api/user';
 import Link from 'next/link';
@@ -41,7 +41,7 @@ const Register: React.FC<RegisterProps> = ({ showModalRegister, setShowModalRegi
             .oneOf([Yup.ref('password')], 'Mật khẩu phải trùng khớp!')
             .required('Vui lòng nhập thông tin!'),
         name: Yup.string().required('Vui lòng nhập thông tin!'),
-        phoneNumber: Yup.string().required('Vui lòng nhập thông tin!'),
+        phoneNumber: Yup.string().min(10, 'Số điện thoại cần dài ít nhất 10 ký tự!').max(10, 'Đã thừa ký tự!').required('Vui lòng nhập thông tin!'),
         address: Yup.string().required('Vui lòng nhập thông tin!'),
     });
 

@@ -6,7 +6,7 @@ import { XMarkIcon } from '@heroicons/react/24/outline';
 interface UtilitiesProductProps {
     showModalUtilitiesProduct: boolean;
     setShowModalUtilitiesProduct: React.Dispatch<React.SetStateAction<boolean>>;
-    utilityDetails: Array<{ label: string; image: string }>;
+    utilityDetails: Array<{ id: string, label: string; image: string }>;
 }
 
 const UtilitiesProduct: React.FC<UtilitiesProductProps> = ({ showModalUtilitiesProduct, setShowModalUtilitiesProduct, utilityDetails }) => {
@@ -25,7 +25,7 @@ const UtilitiesProduct: React.FC<UtilitiesProductProps> = ({ showModalUtilitiesP
                     >
                         <div className="bg-white px-4 pb-4 pt-5 sm:p-6">
                             <div className="mt-3 sm:mt-0 sm:text-left">
-                                <DialogTitle as="h3" className="text-base font-semibold leading-6 text-gray-900 flex  items-center">
+                                <DialogTitle as="h3" className="text-base font-semibold leading-6 text-gray-900 flex items-center">
                                     <button
                                         type="button"
                                         className='flex flex-1 justify-end'
@@ -38,23 +38,21 @@ const UtilitiesProduct: React.FC<UtilitiesProductProps> = ({ showModalUtilitiesP
                                 <div>
                                     <div className="text-3xl font-semibold mb-2">Các tiện ích ở đây</div>
                                     <div className="grid grid-cols-2 grid-rows-2 gap-4 overflow-hidden">
-                                        {utilityDetails.map((utility: any) => {
+                                        {utilityDetails.map((utility) => {
                                             let imageBase64 = '';
                                             if (utility.image) {
                                                 imageBase64 = Buffer.from(utility.image, 'base64').toString('binary');
                                             }
 
                                             return (
-                                                <>
-                                                    <div className="flex items-center" key={utility.id}>
-                                                        <img
-                                                            src={imageBase64}
-                                                            alt={utility.label}
-                                                            className='mt-2 rounded-md mr-2 sm:mr-7 h-8 w-8 sm:h-12 sm:w-12'
-                                                        />
-                                                        <span className='text-base sm:text-xl'>{utility.label}</span>
-                                                    </div>
-                                                </>
+                                                <div className="flex items-center" key={utility.id}>
+                                                    <img
+                                                        src={imageBase64}
+                                                        alt={utility.label}
+                                                        className='mt-2 rounded-md mr-2 sm:mr-7 h-8 w-8 sm:h-12 sm:w-12'
+                                                    />
+                                                    <span className='text-base sm:text-xl'>{utility.label}</span>
+                                                </div>
                                             )
                                         })}
                                     </div>
