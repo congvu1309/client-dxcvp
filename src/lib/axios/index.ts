@@ -1,8 +1,9 @@
-// axios-instance.js
 import axios from 'axios';
 
+const BACKEND_URL = process.env.NEXT_PUBLIC_SERVER_URL;
+
 const instance = axios.create({
-    baseURL: process.env.BACKEND_URL ?? 'http://localhost:3100',
+    baseURL: BACKEND_URL,
 });
 
 instance.interceptors.response.use(

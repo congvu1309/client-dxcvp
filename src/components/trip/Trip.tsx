@@ -60,6 +60,8 @@ const Trip = () => {
     const pendingSchedules = schedules.filter(schedule => schedule.status === 'pending');
     const acceptSchedules = schedules.filter(schedule => schedule.status === 'accept');
 
+    // const inUseSchedules = schedules.filter(schedule => schedule.status === 'in-use');
+
     const getImageSrc = (imageData: string | undefined) => {
         if (!imageData) return defaultImage.src;
         try {
@@ -113,18 +115,34 @@ const Trip = () => {
                 <LoadingPage />
             ) : (
                 <>
-                    {schedules.length > 0 ? (
+                    {acceptSchedules.length > 0 && (
                         <>
                             <div className="text-xl sm:text-3xl font-semibold mb-10">Đã duyệt</div>
                             {acceptSchedules.map(schedule => (
                                 <ScheduleCard key={schedule.id} schedule={schedule} statusText="(Đã thanh toán)" />
                             ))}
+                        </>
+                    )}
+
+                    {/* {inUseSchedules.length > 0 && (
+                        <>
+                            <div className="text-xl sm:text-3xl font-semibold my-10">Đang ở</div>
+                            {pendingSchedules.map(schedule => (
+                                <ScheduleCard key={schedule.id} schedule={schedule} statusText="(Đã thanh toán)" />
+                            ))}
+                        </>
+                    )} */}
+
+                    {pendingSchedules.length > 0 && (
+                        <>
                             <div className="text-xl sm:text-3xl font-semibold my-10">Đang chờ xử lý</div>
                             {pendingSchedules.map(schedule => (
                                 <ScheduleCard key={schedule.id} schedule={schedule} statusText="(Chỉ trừ tiền khi đã duyệt)" />
                             ))}
                         </>
-                    ) : (
+                    )}
+
+                    {schedules.length === 0 && (
                         <div className="text-center ">
                             <div className="text-lg sm:text-xl font-semibold pb-8">Bạn chưa có lịch trình nào</div>
                             <Link href="/">
@@ -136,7 +154,6 @@ const Trip = () => {
             )}
         </div>
     );
-
 };
 
 export default Trip;

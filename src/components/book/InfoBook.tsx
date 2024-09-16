@@ -251,7 +251,7 @@ const InfoBook: React.FC<InfoBookProps> = ({ productId, startDate, endDate, numb
             if (data.status === 0) {
                 toast.success('Đặt lịch thành công!');
                 setTimeout(() => {
-                    window.location.href = ROUTE.SCHEDULED_SUCCESSFULLY;
+                    window.location.href = ROUTE.TRIP;
                 }, 1500);
             } else if (data.status === 1) {
                 toast.error('Đặt lịch thất bại!');
@@ -517,7 +517,7 @@ const InfoBook: React.FC<InfoBookProps> = ({ productId, startDate, endDate, numb
                         </div>
                         <div className='flex items-center justify-center'>
                             <button
-                                className='block rounded-md border-[1px] border-gray-300 py-2 px-4 bg-primary text-white text-xl sm:text-2xl shadow-sm focus:ring-indigo-500 focus:border-indigo-500'
+                                className='block rounded-md border-[1px] border-gray-300 py-2 px-4 bg-primary text-white text-xl sm:text-xl shadow-sm focus:ring-indigo-500 focus:border-indigo-500'
                                 type='submit'
                             >
                                 Xác nhận và thanh toán
