@@ -13,6 +13,9 @@ export default function Footer() {
                         <h5 className="text-lg mt-0 mb-2">
                             Đặt phòng với chúng tôi và đi du lịch thật phong cách.
                         </h5>
+                        <h5 className="text-lg mt-0 mb-2">
+                            Liên hệ với chúng tôi nếu bạn muốn trở thành nhà cung cấp dịch vụ!
+                        </h5>
                         <div className="mt-6 lg:mb-0 mb-6 flex">
                             <button className="bg-white shadow-lg font-normal h-10 w-10 items-center justify-center align-center rounded-full outline-none focus:outline-none mr-2 flex" type="button">
                                 <FaGithub />

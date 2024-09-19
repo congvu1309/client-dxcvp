@@ -25,6 +25,8 @@ import Login from "../auth/Login";
 import Register from "../auth/Register";
 import { ScheduleModel } from "@/models/schedule";
 import { getAllScheduleByProductId } from "@/api/schedule";
+import EvaluationComponent from "./EvaluationComponent";
+import EvaluationModal from "./EvaluationModal";
 
 const MapProduct = dynamic(() => import('./MapProduct'), { ssr: false });
 
@@ -47,8 +49,10 @@ const DetailProduct = () => {
     const [showModalRegister, setShowModalRegister] = useState(false);
     const [showModalLogin, setShowModalLogin] = useState(false);
     const [schedules, setSchedules] = useState<ScheduleModel[]>([]);
+    const [showModalEvaluation, setShowEvaluationModal] = useState(false);
 
     useEffect(() => {
+
         const fetchProductData = async () => {
             try {
                 const response = await getProductByIdApi(id);
@@ -186,7 +190,7 @@ const DetailProduct = () => {
     }
 
     const disabledDates = schedules
-        .filter((schedule) => schedule.status === 'accept')
+        .filter((schedule) => schedule.status === 'accept' || schedule.status === 'in-use')
         .reduce<Date[]>((dates, schedule) => {
             const start = parse(schedule.startDate, 'dd/MM/yyyy', new Date());
             const end = parse(schedule.endDate, 'dd/MM/yyyy', new Date());
@@ -270,10 +274,10 @@ const DetailProduct = () => {
                                     })}
                                 </div>
                             </div>
-                            <div className="pt-3 sm:pt-5 mb-4">
+                            <div className="pt-3 sm:pt-5 mb-8">
                                 <Link
                                     href="#"
-                                    className="text-base sm:text-lg font-semibold underline"
+                                    className="text-base sm:text-lg font-semibold border p-4 rounded-xl"
                                     onClick={() => setShowModalUtilitiesProduct(true)}
                                 >
                                     Xem toàn bộ {utilityDetails.length} tiện nghi
@@ -380,10 +384,19 @@ const DetailProduct = () => {
                         <span className="text-base sm:text-lg">{product?.districts}, {product.provinces}</span>
                         <MapProduct districts={product.districts} />
                     </div>
-                    {/* <div className="mt-4">
-                        <div className="text-xl sm:text-3xl font-semibold mb-2">Đánh giá</div>
-
-                    </div> */}
+                    <EvaluationComponent
+                        productId={id}
+                        showAt='DetailProduct'
+                    />
+                    <div className="pt-3 sm:pt-5 mt-4">
+                        <Link
+                            href="#"
+                            className="text-base sm:text-lg font-semibold border p-4 rounded-xl"
+                            onClick={() => setShowEvaluationModal(true)}
+                        >
+                            Xem toàn bộ
+                        </Link>
+                    </div>
                 </div>
                 <DescriptionProduct
                     showModalDescriptionProduct={showModalDescriptionProduct}
@@ -404,6 +417,12 @@ const DetailProduct = () => {
                     showModalRegister={showModalRegister}
                     setShowModalRegister={setShowModalRegister}
                     setShowModalLogin={setShowModalLogin}
+                />
+                <EvaluationModal
+                    showModalEvaluation={showModalEvaluation}
+                    setShowEvaluationModal={setShowEvaluationModal}
+                    productId={id}
+                    showAt='EvaluationModal'
                 />
             </>
         );

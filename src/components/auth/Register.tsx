@@ -6,10 +6,11 @@ import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { toast } from 'react-toastify';
 import { useMutation } from 'react-query';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 import { createNewUser } from '@/api/user';
 import Link from 'next/link';
+import useScrollLock from '@/hooks/useScrollLock';
 
 interface RegisterProps {
     showModalRegister: boolean;
@@ -21,6 +22,7 @@ const Register: React.FC<RegisterProps> = ({ showModalRegister, setShowModalRegi
 
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirm, setShowConfirm] = useState(false);
+    useScrollLock(showModalRegister);
 
     const initialFormData = {
         email: '',

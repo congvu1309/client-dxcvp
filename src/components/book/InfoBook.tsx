@@ -119,7 +119,7 @@ const InfoBook: React.FC<InfoBookProps> = ({ productId, startDate, endDate, numb
         cardHolder: Yup.string().required('Vui lòng nhập thông tin!'),
         expiryDate: Yup.string().required('Vui lòng nhập thông tin!'),
         cvv: Yup.string().required('Vui lòng nhập thông tin!'),
-        phoneNumber: Yup.string().required('Vui lòng nhập thông tin!'),
+        phoneNumber: Yup.string().min(10, 'Số điện thoại cần dài ít nhất 10 ký tự!').max(10, 'Đã thừa ký tự!').required('Vui lòng nhập thông tin!'),
         image: Yup.string().required('Vui lòng chọn ảnh!'),
     });
 

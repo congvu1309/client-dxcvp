@@ -11,8 +11,7 @@ import GoogleLogo from '@/public/google-logo.png';
 import Link from 'next/link';
 import { Eye, EyeOff } from 'lucide-react';
 import { useState } from 'react';
-import { signIn } from 'next-auth/react';
-
+import useScrollLock from '@/hooks/useScrollLock';
 interface LoginProps {
     showModalLogin: boolean;
     setShowModalLogin: React.Dispatch<React.SetStateAction<boolean>>;
@@ -20,7 +19,9 @@ interface LoginProps {
 }
 
 const Login: React.FC<LoginProps> = ({ showModalLogin, setShowModalLogin, setShowModalRegister }) => {
+ 
     const [showPassword, setShowPassword] = useState(false);
+    useScrollLock(showModalLogin);
 
     const initialFormData = {
         email: '',
@@ -145,16 +146,6 @@ const Login: React.FC<LoginProps> = ({ showModalLogin, setShowModalLogin, setSho
                                         </div>
                                     </form>
                                 </div>
-                            </div>
-                        </div>
-                        <div className="flex justify-center text-xl">hoặc</div>
-                        <div className='text-center text-xl font-semibold px-6 py-2 cursor-pointer'>
-                            <div
-                                className='w-full border-2 p-1.5 rounded-lg outline-none bg-white text-black hover:bg-gray-200 flex items-center justify-center'
-                                onClick={() => signIn('google')}
-                            >
-                                <img alt="Logo" src={GoogleLogo.src} className="h-7 w-auto" />
-                                <span className='pl-2'>Đăng nhập với Google</span>
                             </div>
                         </div>
                         <div className="px-6 py-4">
