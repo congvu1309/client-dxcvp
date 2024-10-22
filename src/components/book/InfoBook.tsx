@@ -2,7 +2,6 @@
 
 import { getProductByIdApi } from '@/api/product';
 import { IMAGE_PAYMENT } from '@/constants/common';
-import { TIME_TS } from '@/constants/time';
 import { ProductModel } from '@/models/product';
 import CommonUtils from '@/utils/CommonUtils';
 import { useFormik } from 'formik';
@@ -144,19 +143,6 @@ const InfoBook: React.FC<InfoBookProps> = ({ productId, startDate, endDate, numb
     const formattedServiceCharge = serviceCharge.toLocaleString();
     const totalAmount = provisional + serviceCharge;
     const formattedTotalAmount = totalAmount.toLocaleString();
-
-    const timeOptions = TIME_TS.map(time => ({
-        value: time.id.toString(),
-        label: time.title,
-    }));
-
-    const timeLookup = new Map<string, string>();
-    timeOptions.forEach(option => {
-        timeLookup.set(option.value, option.label);
-    });
-
-    const checkInLabel = timeLookup.get(product?.checkIn.toString() ?? '') ?? '';
-    const checkOutLabel = timeLookup.get(product?.checkOut.toString() ?? '') ?? '';
 
     const handleOnchangeImage = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const data = event.target.files;
@@ -339,10 +325,10 @@ const InfoBook: React.FC<InfoBookProps> = ({ productId, startDate, endDate, numb
                                         </div>
                                     </div>
                                     <div className="text-base sm:text-lg mb-2">
-                                        <span>Nhận phòng sau {checkInLabel}</span>
+                                        <span>Nhận phòng sau {product.checkIn}</span>
                                     </div>
                                     <div className="text-base sm:text-lg mb-2">
-                                        <span>Trả phòng trước {checkOutLabel}</span>
+                                        <span>Trả phòng trước {product.checkOut}</span>
                                     </div>
                                     {previewImgURLs[0] && (
                                         <div

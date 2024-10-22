@@ -8,6 +8,7 @@ import defaultImage from '@/public/no-image.jpg';
 import Image from 'next/image';
 import { ROUTE } from "@/constants/enum";
 import LoadingPage from "@/app/loading";
+
 interface SearchProductProps {
     searchProduct: string | null;
 }

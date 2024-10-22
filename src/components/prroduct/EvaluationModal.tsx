@@ -7,17 +7,17 @@ import useScrollLock from '@/hooks/useScrollLock';
 
 interface EvaluationModalProps {
     showModalEvaluation: boolean;
-    setShowEvaluationModal: React.Dispatch<React.SetStateAction<boolean>>;
+    setShowModalEvaluation: React.Dispatch<React.SetStateAction<boolean>>;
     productId: number;
     showAt: string;
 }
 
-const EvaluationModal: React.FC<EvaluationModalProps> = ({ showModalEvaluation, setShowEvaluationModal, productId, showAt }) => {
+const EvaluationModal: React.FC<EvaluationModalProps> = ({ showModalEvaluation, setShowModalEvaluation, productId, showAt }) => {
 
     useScrollLock(showModalEvaluation);
 
     return (
-        <Dialog open={showModalEvaluation} onClose={() => setShowEvaluationModal(false)} className="relative z-50">
+        <Dialog open={showModalEvaluation} onClose={() => setShowModalEvaluation(false)} className="relative z-50">
             <DialogBackdrop
                 transition
                 className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in"
@@ -35,7 +35,7 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ showModalEvaluation, 
                                         type="button"
                                         className='flex flex-1 justify-end'
                                         data-autofocus
-                                        onClick={() => setShowEvaluationModal(false)}
+                                        onClick={() => setShowModalEvaluation(false)}
                                     >
                                         <XMarkIcon aria-hidden="true" className="h-6 w-6" />
                                     </button>

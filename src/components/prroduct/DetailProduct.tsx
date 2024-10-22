@@ -49,7 +49,7 @@ const DetailProduct = () => {
     const [showModalRegister, setShowModalRegister] = useState(false);
     const [showModalLogin, setShowModalLogin] = useState(false);
     const [schedules, setSchedules] = useState<ScheduleModel[]>([]);
-    const [showModalEvaluation, setShowEvaluationModal] = useState(false);
+    const [showModalEvaluation, setShowModalEvaluation] = useState(false);
 
     useEffect(() => {
 
@@ -182,6 +182,11 @@ const DetailProduct = () => {
             return;
         }
 
+        if (!endDate || endDate <= startDate) {
+            toast.error('Chọn ngày kết thúc.');
+            return;
+        }
+
         if (!user) {
             setShowModalLogin(true)
         } else {
@@ -286,7 +291,7 @@ const DetailProduct = () => {
                             <div className="mb-4">
                                 <div className="text-xl sm:text-3xl font-semibold mb-2">Nội quy nhà</div>
                                 <div className="flex flex-col text-base sm:text-lg">
-                                    <span>Nhận phòng sau {checkInLabel}</span>
+                                    <span>Nhận phòng sau: {checkInLabel}</span>
                                     <span>Trả phòng trước {checkOutLabel}</span>
                                     <span>Tối đa {product.guests} khách</span>
                                 </div>
@@ -382,7 +387,7 @@ const DetailProduct = () => {
                     <div className="mb-4">
                         <div className="text-xl sm:text-3xl font-semibold mb-2">Nơi bạn sẽ đến</div>
                         <span className="text-base sm:text-lg">{product?.districts}, {product.provinces}</span>
-                        <MapProduct districts={product.districts} />
+                        {/* <MapProduct districts={product.districts} /> */}
                     </div>
                     <EvaluationComponent
                         productId={id}
@@ -392,7 +397,7 @@ const DetailProduct = () => {
                         <Link
                             href="#"
                             className="text-base sm:text-lg font-semibold border p-4 rounded-xl"
-                            onClick={() => setShowEvaluationModal(true)}
+                            onClick={() => setShowModalEvaluation(true)}
                         >
                             Xem toàn bộ
                         </Link>
@@ -420,7 +425,7 @@ const DetailProduct = () => {
                 />
                 <EvaluationModal
                     showModalEvaluation={showModalEvaluation}
-                    setShowEvaluationModal={setShowEvaluationModal}
+                    setShowModalEvaluation={setShowModalEvaluation}
                     productId={id}
                     showAt='EvaluationModal'
                 />

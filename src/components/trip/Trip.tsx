@@ -146,7 +146,8 @@ const Trip = () => {
                         <div className="text-center ">
                             <div className="text-lg sm:text-xl font-semibold pb-8">Bạn chưa có lịch trình nào</div>
                             <Link href="/">
-                                <span className="text-xl sm:text-3xl font-semibold text-primary">Quay lại trang home để thêm hành trình mới</span>
+                                <span className="text-xl sm:text-3xl font-semibold text-primary">Quay lại trang chủ để thêm hành trình mới
+                                </span>
                             </Link>
                         </div>
                     )}

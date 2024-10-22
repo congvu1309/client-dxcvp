@@ -50,6 +50,7 @@ const Header: React.FC<HeaderProps> = ({ isHidden }) => {
     const handleSearchSubmit = () => {
         if (selectedProvince) {
             router.push(`${ROUTE.SEARCH_RESULTS}?address=${encodeURIComponent(selectedProvince.label)}`);
+            console.log(selectedProvince.label)
         } else {
             console.warn('No province selected');
         }
@@ -292,7 +293,7 @@ const Header: React.FC<HeaderProps> = ({ isHidden }) => {
                                     </div>
                                     :
                                     <div className="-my-6 divide-y divide-gray-500/10">
-                                        <div className="space-y-2 pt-6">
+                                        <div className="space-y-2 pt-10">
                                             <Link
                                                 href="#"
                                                 className="block py-3 text-base text-gray-700 font-semibold data-[focus]:bg-gray-100 data-[focus]:text-gray-900"

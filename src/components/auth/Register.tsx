@@ -224,7 +224,7 @@ const Register: React.FC<RegisterProps> = ({ showModalRegister, setShowModalRegi
                                 </div>
                             </div>
                             <div className="px-6 py-1 sm:px-6 sm:py-4">
-                                Bạn đã có tài khoản?
+                                Bạn đã có tài khoản!
                                 <Link
                                     href="#"
                                     onClick={() => {

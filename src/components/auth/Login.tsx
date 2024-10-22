@@ -7,7 +7,6 @@ import { useFormik } from 'formik';
 import { toast } from 'react-toastify';
 import { useMutation } from 'react-query';
 import { loginApi } from '@/api/user';
-import GoogleLogo from '@/public/google-logo.png';
 import Link from 'next/link';
 import { Eye, EyeOff } from 'lucide-react';
 import { useState } from 'react';

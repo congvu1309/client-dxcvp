@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 const ListCategory = () => {
 
     const [categories, setCategories] = useState<CategoryModel[]>([]);
+
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const router = useRouter();
 
@@ -74,7 +75,7 @@ const ListCategory = () => {
                                         alt={category.title}
                                         className="rounded-md h-6 w-auto bg-no-repeat bg-center bg-cover"
                                     />
-                                    <h2 className="text-base font-semibold truncate">{category.title}</h2>
+                                    <h2 className="text-sm sm:text-base font-semibold truncate">{category.title}</h2>
                                 </div>
                             </div>
                         );

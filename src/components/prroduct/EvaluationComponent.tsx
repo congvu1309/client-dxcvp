@@ -22,7 +22,6 @@ const EvaluationComponent: React.FC<EvaluationComponentProps> = ({ productId, sh
     const [evaluations, setEvaluations] = useState<EvaluationModel[]>([]);
     const [editingEvaluation, setEditingEvaluation] = useState<EvaluationModel | null>(null);
     const userId = String(user?.id);
-    console.log(showAt)
 
     useEffect(() => {
         if (user) {
@@ -135,7 +134,7 @@ const EvaluationComponent: React.FC<EvaluationComponentProps> = ({ productId, sh
                                         {imageBase64 ? (
                                             <img src={imageBase64} alt='Avatar' className='h-full w-full rounded-full object-cover' />
                                         ) : (
-                                            <span className='text-2xl font-semibold'>{user?.name?.charAt(0).toUpperCase() || 'A'}</span>
+                                            <span className='text-2xl font-semibold'>{user?.name?.charAt(0).toUpperCase() ?? 'A'}</span>
                                         )}
                                     </div>
                                     <div className="flex-1 flex flex-col">
@@ -194,7 +193,7 @@ const EvaluationComponent: React.FC<EvaluationComponentProps> = ({ productId, sh
     return (
         <>
             <div className="text-xl sm:text-3xl font-semibold mb-4">Đánh giá</div>
-            {/* Show form only if user is adding or editing */}
+
             {user && (userEvaluation || editingEvaluation) && (
                 <form onSubmit={formik.handleSubmit} className="mb-4">
                     <div className="flex items-center mb-4">
